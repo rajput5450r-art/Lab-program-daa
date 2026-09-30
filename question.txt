@@ -1,0 +1,27 @@
+def select_meeting_activities(activities):
+    data = [(str(a[0]), int(a[1]), int(a[2])) for a in activities]
+    # earliest finish; tie -> smaller start; tie -> smaller ID
+    data.sort(key=lambda x: (x[2], x[1], x[0]))
+
+    result = [
+        "Activity Selection Report",
+        "Selected Activities",
+        "Activity Start Finish Reason",
+    ]
+
+    last_finish = None
+    count = 0
+    for act_id, start, finish in data:
+        if last_finish is None:
+            reason = "Selected first because it finishes earliest"
+        elif start >= last_finish:
+            reason = "Selected because start time is compatible"
+        else:
+            continue
+        result.append(f"{act_id} {start} {finish} {reason}")
+        last_finish = finish
+        count += 1
+
+    result.append(f"Total Selected: {count}")
+    result.append("Justification: Greedy selection by earliest finish time maximizes compatible activities")
+    return result
